@@ -1,0 +1,11 @@
+# project
+tmp/
+
+# goland
+/.idea
+/.run
+
+# tofu
+.terraform
+*.tfstate
+*.tfstate.backup
