@@ -13,8 +13,8 @@ terraform {
 
 resource "aws_iam_service_linked_role" "aws_service_role_for_asg" {
   aws_service_name = "autoscaling.amazonaws.com"
-  custom_suffix = "t02l"
-  description = "Allows EC2 Auto Scaling to use or manage AWS services and resources on your behalf."
+  custom_suffix    = "t02l"
+  description      = "Allows EC2 Auto Scaling to use or manage AWS services and resources on your behalf."
 }
 
 data "aws_iam_policy" "administrator_access_policy" {
@@ -22,7 +22,7 @@ data "aws_iam_policy" "administrator_access_policy" {
 }
 
 data "aws_iam_policy" "policy_sample_ec2_permissions" {
-  name        = "policy-sample-ec2-permissions"
+  name = "policy-sample-ec2-permissions"
 }
 
 resource "aws_iam_role" "EC2AdminRole" {
@@ -31,8 +31,8 @@ resource "aws_iam_role" "EC2AdminRole" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action    = "sts:AssumeRole"
-        Effect    = "Allow"
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
         Principal = {
           Service = "ec2.amazonaws.com"
         }
@@ -40,7 +40,7 @@ resource "aws_iam_role" "EC2AdminRole" {
     ]
   })
   managed_policy_arns = [
-  "${data.aws_iam_policy.administrator_access_policy.arn}",
+    "${data.aws_iam_policy.administrator_access_policy.arn}",
     "${data.aws_iam_policy.policy_sample_ec2_permissions.arn}"
   ]
 }
