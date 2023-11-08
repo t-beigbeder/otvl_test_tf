@@ -21,21 +21,26 @@ data "aws_iam_policy" "administrator_access_policy" {
   arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
+data "aws_iam_policy" "policy_sample_ec2_permissions" {
+  name        = "policy-sample-ec2-permissions"
+}
+
 resource "aws_iam_role" "EC2AdminRole" {
   name = "role-t02l-appname-dev-DevAdmin-ec2admin"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
+        Action    = "sts:AssumeRole"
+        Effect    = "Allow"
         Principal = {
           Service = "ec2.amazonaws.com"
-        },
-        ManagedPolicyArns = [
-          "${data.aws_iam_policy.administrator_access_policy.arn}"
-        ]
-      },
+        }
+      }
     ]
   })
+  managed_policy_arns = [
+  "${data.aws_iam_policy.administrator_access_policy.arn}",
+    "${data.aws_iam_policy.policy_sample_ec2_permissions.arn}"
+  ]
 }
