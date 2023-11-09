@@ -8,17 +8,26 @@
 
 ## Tool setup
 
-Avoid downloading 300 MB for aws plugin per tf launch
+Avoid storing 300 MB for aws plugin per tf launch
 
     $ vi ~/.tofurc
     plugin_cache_dir = "$HOME/.terraform.d/plugin-cache"
+
+Configure the backend
+
+    $ cd global/s3
+    $ tofu init
+    $ tofu apply
+    # uncomment backend in main.tf
+    $ tofu init
 
 ## Help
 
 ### General
 
 - [github terraform up and running](https://github.com/brikis98/terraform-up-and-running-code)
-- 
+- [h2 use tf variables](https://spacelift.io/blog/how-to-use-terraform-variables)
+
 ### IAM
 
 - [Use AWS Managed Policies in Terraform](https://francescoboffa.com/terraform-aws-managed-policies/)
