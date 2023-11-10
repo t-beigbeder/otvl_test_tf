@@ -27,6 +27,7 @@ Configure the backend
 
 - [github terraform up and running](https://github.com/brikis98/terraform-up-and-running-code)
 - [h2 use tf variables](https://spacelift.io/blog/how-to-use-terraform-variables)
+- [Terraform Variables - A Standard](https://lachlanwhite.com/posts/terraform/10-11-2021-terraform-variables-a-standard/)
 
 ### IAM
 

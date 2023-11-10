@@ -22,8 +22,8 @@ terraform {
 
 }
 
-resource "aws_iam_service_linked_role" "aws_service_role_for_asg" {
-  aws_service_name = "autoscaling.amazonaws.com"
-  custom_suffix    = "t30"
-  description      = "Allows EC2 Auto Scaling to use or manage AWS services and resources on your behalf."
+module "prereqs" {
+  source = "../modules/prereqs"
+  application_code = var.application_code
+  default_tags = var.default_tags
 }

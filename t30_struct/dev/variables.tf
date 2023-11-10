@@ -9,12 +9,6 @@ variable "application_code" {
 }
 
 variable "default_tags" {
-  description = "Default resource tags"
+  description = "Default resource tags HERE"
   type        = map(string)
-}
-
-variable "tag_keys" {
-  description = "Create IAM users with these names"
-  type        = list(string)
-  default     = ["neo", "trinity", "morpheus"]
 }
