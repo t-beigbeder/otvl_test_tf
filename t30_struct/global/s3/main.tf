@@ -22,6 +22,17 @@ provider "aws" {
   region = "eu-west-3"
 }
 
+locals {
+  ctags = {
+    for vt in var.resource_tags : vt.key => vt.constant
+    if vt["is_constant"]
+  }
+  atags = {
+    for vt in var.resource_tags : vt.key => lower(var.application_code)
+    if vt.is_application_code
+  }
+}
+
 resource "aws_s3_bucket" "terraform_state" {
 
   bucket = var.bucket_name
@@ -29,6 +40,8 @@ resource "aws_s3_bucket" "terraform_state" {
   // This is only here so we can destroy the bucket as part of automated tests. You should not copy this for production
   // usage
   force_destroy = true
+
+  tags = merge(local.ctags, local.atags)
 
 }
 

@@ -1,0 +1,26 @@
+application_code = "A1B2"
+
+resource_tags = [
+  {
+    key = "managed-by"
+    is_constant = true
+    constant = "opentofu"
+    is_application_code = false
+    is_env_name = false
+    is_project_name = false
+  },
+  {
+    key =  "corp:billing"
+    is_constant = false
+    is_application_code = true
+    is_env_name = false
+    is_project_name = false
+  },
+  {
+    key =  "corp:application_code"
+    is_constant = false
+    is_application_code = true
+    is_env_name = false
+    is_project_name = false
+  }
+]

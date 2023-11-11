@@ -32,3 +32,13 @@ Configure the backend
 ### IAM
 
 - [Use AWS Managed Policies in Terraform](https://francescoboffa.com/terraform-aws-managed-policies/)
+
+### Specific cases
+
+- [Destroy all but protected resource](https://stackoverflow.com/questions/55265203/terraform-delete-all-resources-except-one)
+
+Eg
+
+    tofu destroy
+    tofu state list
+    tofu state rm module.prereqs.aws_kms_key.kms_key_for_infra
