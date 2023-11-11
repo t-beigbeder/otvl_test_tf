@@ -1,5 +1,6 @@
 # project
 tmp/
+*.tmp
 
 # goland
 /.idea

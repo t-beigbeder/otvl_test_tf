@@ -25,5 +25,8 @@ terraform {
 module "prereqs" {
   source = "../modules/prereqs"
   application_code = var.application_code
-  default_tags = var.default_tags
+  env_name = var.env_name
+  project_name = var.project_name
+  resource_tags = var.resource_tags
+  app_has_infra_bucket = var.app_has_infra_bucket
 }

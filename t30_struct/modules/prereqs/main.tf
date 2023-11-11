@@ -12,6 +12,24 @@ terraform {
 
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
+locals {
+  ctags = {
+    for vt in var.resource_tags : vt.key => vt.constant
+    if vt["is_constant"]
+  }
+  atags = {
+    for vt in var.resource_tags : vt.key => lower(var.application_code)
+    if vt.is_application_code
+  }
+  etags = {
+    for vt in var.resource_tags : vt.key => lower(var.env_name)
+    if vt.is_env_name
+  }
+  ptags = {
+    for vt in var.resource_tags : vt.key => lower(var.project_name)
+    if vt.is_project_name
+  }
+}
 
 resource "aws_iam_service_linked_role" "role_for_asg" {
   aws_service_name = "autoscaling.amazonaws.com"
@@ -24,18 +42,17 @@ resource "aws_iam_service_linked_role" "role_for_asg" {
 # to the root account, to S3 service, Lambda, Cloudwatch Events and ASG.
 
 resource "aws_kms_key" "kms_key_for_infra" {
-  # TODO DeletionPolicy: Retain
-  description = "KMS symmetric Key used for EBS, RDS and S3 encryption"
+  description         = "KMS symmetric Key used for EBS, RDS and S3 encryption"
   enable_key_rotation = true
-  tags = merge(var.default_tags,
-    {
-      "corp:billing": lower(var.application_code)
-    })
+  lifecycle {
+    prevent_destroy = true
+  }
+  tags = merge(local.ctags, local.atags, local.etags, local.ptags)
 }
 
-resource "aws_kms_alias" "kms_key_for_infra_alias" {
+resource "aws_kms_alias" "kms_alias_for_infra" {
   target_key_id = aws_kms_key.kms_key_for_infra.id
-  name = "alias/kms-key-${lower(var.application_code)}-dev-${data.aws_region.current.name}"
+  name          = "alias/kms-key-${lower(var.application_code)}-${var.env_name}-${data.aws_region.current.name}"
 }
 
 resource "aws_kms_key_policy" "kms_key_for_infra" {
@@ -163,4 +180,26 @@ resource "aws_kms_key_policy" "kms_key_for_infra" {
       }
     ]
   })
+}
+
+resource "aws_s3_bucket" "app_infra_bucket" {
+  count  = var.app_has_infra_bucket ? 1 : 0
+  bucket = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-infra-${data.aws_region.current.name}"
+  tags = merge(local.ctags, local.atags, local.etags, local.ptags)
+}
+
+resource "aws_s3_bucket_acl" "app_infra_bucket_private" {
+  count  = length(aws_s3_bucket.app_infra_bucket)
+  bucket = aws_s3_bucket.app_infra_bucket[count.index].id
+  acl    = "private"
+}
+
+# Explicitly block all public access to the S3 bucket
+resource "aws_s3_bucket_public_access_block" "app_infra_bucket_access" {
+  count                   = length(aws_s3_bucket.app_infra_bucket)
+  bucket                  = aws_s3_bucket.app_infra_bucket[count.index].id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
