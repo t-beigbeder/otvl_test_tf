@@ -45,3 +45,5 @@ resource_tags = [
   }
 
 ]
+
+ec2_admin_instance_type = "t3.micro"

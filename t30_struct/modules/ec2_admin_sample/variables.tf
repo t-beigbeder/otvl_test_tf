@@ -18,11 +18,6 @@ variable "project_name" {
   type        = string
 }
 
-variable "app_has_infra_bucket" {
-  description = "Whether an application S3 bucket for infra code has to be created"
-  type = bool
-}
-
 variable "resource_tags" {
   description = "Tags that apply to all resources"
   type        = list(object({
@@ -35,7 +30,7 @@ variable "resource_tags" {
   }))
 }
 
-variable "ec2_admin_instance_type" {
-  description = "The type of EC2 Admin Instances to run (e.g. t3.micro)"
+variable "instance_type" {
+  description = "The type of EC2 Instances to run (e.g. t3.micro)"
   type        = string
 }
