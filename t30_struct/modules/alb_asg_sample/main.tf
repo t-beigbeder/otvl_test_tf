@@ -33,7 +33,7 @@ locals {
 
 data "aws_ami" "debian" {
   most_recent = true
-  name_regex = "debian-12"
+  name_regex  = "debian-12"
   filter {
     name   = "architecture"
     values = ["x86_64"]
@@ -52,28 +52,34 @@ data "aws_subnets" "default" {
   }
 }
 
-resource "aws_launch_configuration" "as_conf" {
-  image_id        = data.aws_ami.debian.id
-  instance_type   = var.instance_type
-  name_prefix = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
-
-  lifecycle {
-    create_before_destroy = true
+resource "aws_launch_template" "this" {
+  image_id      = data.aws_ami.debian.id
+  instance_type = var.instance_type
+  name          = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
+  tag_specifications {
+    tags = merge(
+      {
+        Name = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
+      },
+      local.ctags, local.atags, local.etags, local.ptags
+    )
+    resource_type = "instance"
   }
+  tags = merge(
+    local.ctags, local.atags, local.etags, local.ptags
+  )
 }
 
 resource "aws_autoscaling_group" "asg" {
-  launch_configuration = aws_launch_configuration.as_conf.name
-  vpc_zone_identifier  = data.aws_subnets.default.ids
+
+  launch_template {
+    id = aws_launch_template.this.id
+    version = "$Latest"
+  }
+  vpc_zone_identifier = data.aws_subnets.default.ids
 
   min_size = var.min_size
   max_size = var.max_size
-
-  tag {
-    key                 = "Name"
-    value               = var.cluster_name
-    propagate_at_launch = true
-  }
 
   lifecycle {
     create_before_destroy = true
