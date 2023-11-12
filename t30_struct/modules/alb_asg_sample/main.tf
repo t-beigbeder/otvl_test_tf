@@ -31,14 +31,14 @@ locals {
   }
 }
 
-data "aws_ami" "debian" {
+data "aws_ami" "ubuntu" {
   most_recent = true
-  name_regex  = "debian-12"
+  name_regex  = "ubuntu-jammy-22.04"
   filter {
     name   = "architecture"
     values = ["x86_64"]
   }
-  owners = ["136693071363"]
+  owners = ["099720109477"] # Canonical
 }
 
 data "aws_vpc" "default" {
@@ -52,14 +52,33 @@ data "aws_subnets" "default" {
   }
 }
 
+resource "aws_security_group" "this" {
+  name = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-asg-${data.aws_region.current.name}"
+}
+
+resource "aws_security_group_rule" "allow_server_http_inbound" {
+  type              = "ingress"
+  security_group_id = aws_security_group.this.id
+
+  from_port   = var.server_port
+  to_port     = var.server_port
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
 resource "aws_launch_template" "this" {
-  image_id      = data.aws_ami.debian.id
-  instance_type = var.instance_type
-  name          = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
+  update_default_version = true
+  name                   = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
+  image_id               = data.aws_ami.ubuntu.id
+  instance_type          = var.instance_type
+  user_data = base64encode(templatefile("${path.module}/user-data.sh", {
+    server_port = var.server_port
+  }))
+  vpc_security_group_ids = [aws_security_group.this.id]
   tag_specifications {
     tags = merge(
       {
-        Name = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
+        Name = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
       },
       local.ctags, local.atags, local.etags, local.ptags
     )
@@ -74,7 +93,6 @@ resource "aws_autoscaling_group" "asg" {
 
   launch_template {
     id = aws_launch_template.this.id
-    version = "$Latest"
   }
   vpc_zone_identifier = data.aws_subnets.default.ids
 
@@ -84,4 +102,35 @@ resource "aws_autoscaling_group" "asg" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_security_group" "alb" {
+  name = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-alb-${data.aws_region.current.name}"
+}
+
+resource "aws_security_group_rule" "allow_http_inbound" {
+  type              = "ingress"
+  security_group_id = aws_security_group.alb.id
+
+  from_port   = 80
+  to_port     = 80
+  protocol    = "tcp"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_security_group_rule" "allow_all_outbound" {
+  type              = "egress"
+  security_group_id = aws_security_group.alb.id
+
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+}
+
+resource "aws_lb" "this" {
+  name = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-sample"
+  load_balancer_type = "application"
+  subnets            = data.aws_subnets.default.ids
+  security_groups    = [aws_security_group.alb.id]
 }
