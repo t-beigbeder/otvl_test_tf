@@ -45,7 +45,7 @@ resource "aws_kms_key" "kms_key_for_infra" {
   description         = "KMS symmetric Key used for EBS, RDS and S3 encryption"
   enable_key_rotation = true
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
   tags = merge(local.ctags, local.atags, local.etags, local.ptags)
 }

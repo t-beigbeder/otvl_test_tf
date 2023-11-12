@@ -71,9 +71,15 @@ resource "aws_iam_role" "this" {
   ]
 }
 
+resource "aws_iam_instance_profile" "this" {
+  role = aws_iam_role.this.name
+  name = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-ec2admin-${data.aws_region.current.name}"
+}
+
 resource "aws_instance" "this" {
-  ami = data.aws_ami.this.id
+  ami           = data.aws_ami.this.id
   instance_type = var.instance_type
+  iam_instance_profile = aws_iam_instance_profile.this.name
   tags = merge({
     Name = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-ec2admin-${data.aws_region.current.name}"
     },
