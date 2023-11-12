@@ -44,6 +44,7 @@ resource "aws_iam_service_linked_role" "role_for_asg" {
 resource "aws_kms_key" "kms_key_for_infra" {
   description         = "KMS symmetric Key used for EBS, RDS and S3 encryption"
   enable_key_rotation = true
+  deletion_window_in_days = 7
   lifecycle {
     prevent_destroy = false
   }
