@@ -52,21 +52,19 @@ data "aws_subnets" "default" {
   }
 }
 
-resource "aws_launch_configuration" "lc" {
+resource "aws_launch_configuration" "as_conf" {
   image_id        = data.aws_ami.debian.id
   instance_type   = var.instance_type
+  name_prefix = "s3-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
 
-  # Required when using a launch configuration with an auto scaling group.
   lifecycle {
     create_before_destroy = true
   }
 }
 
 resource "aws_autoscaling_group" "asg" {
-  launch_configuration = aws_launch_configuration.lc.name
+  launch_configuration = aws_launch_configuration.as_conf.name
   vpc_zone_identifier  = data.aws_subnets.default.ids
-  target_group_arns    = [aws_lb_target_group.asg.arn]
-  health_check_type    = "ELB"
 
   min_size = var.min_size
   max_size = var.max_size
@@ -75,5 +73,9 @@ resource "aws_autoscaling_group" "asg" {
     key                 = "Name"
     value               = var.cluster_name
     propagate_at_launch = true
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }

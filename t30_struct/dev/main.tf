@@ -30,16 +30,18 @@ module "prereqs" {
   resource_tags = var.resource_tags
   app_has_infra_bucket = var.app_has_infra_bucket
 }
-/*
+
 module "alb_asg_sample" {
   source = "../modules/alb_asg_sample"
   application_code = var.application_code
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
+  min_size = 1
+  max_size = 2
 }
-*/
 
+/*
 module "ec2_admin_sample" {
   source = "../modules/ec2_admin_sample"
   application_code = var.application_code
@@ -48,3 +50,4 @@ module "ec2_admin_sample" {
   resource_tags = var.resource_tags
   instance_type = var.ec2_admin_instance_type
 }
+*/
