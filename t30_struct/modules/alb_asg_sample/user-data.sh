@@ -9,5 +9,4 @@ apt-get $opts install ec2-instance-connect vim busybox less
 cat > index.html <<EOF
 <h1>Hello, World</h1>
 EOF
-echo running busybox httpd -f -p ${server_port}
 nohup busybox httpd -f -p ${server_port} &

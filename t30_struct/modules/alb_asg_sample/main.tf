@@ -85,7 +85,7 @@ resource "aws_launch_template" "this" {
     server_port = var.server_port
   }))
   vpc_security_group_ids = [aws_security_group.this.id]
-  key_name = var.instance_has_ssh ? var.instance_key_name : null
+  key_name               = var.instance_has_ssh ? var.instance_key_name : null
   tag_specifications {
     tags = merge(
       {
@@ -106,6 +106,8 @@ resource "aws_autoscaling_group" "asg" {
     id = aws_launch_template.this.id
   }
   vpc_zone_identifier = data.aws_subnets.default.ids
+  target_group_arns    = [aws_lb_target_group.this.arn]
+  health_check_type    = "ELB"
 
   min_size = var.min_size
   max_size = var.max_size
@@ -140,7 +142,7 @@ resource "aws_security_group_rule" "allow_all_alb_outbound" {
 }
 
 resource "aws_lb" "this" {
-  name = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-sample"
+  name               = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-sample"
   load_balancer_type = "application"
   subnets            = data.aws_subnets.default.ids
   security_groups    = [aws_security_group.alb.id]
@@ -162,7 +164,7 @@ resource "aws_lb_listener" "this" {
 }
 
 resource "aws_lb_target_group" "this" {
-  name = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-sample"
+  name     = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-sample"
   port     = var.server_port
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
