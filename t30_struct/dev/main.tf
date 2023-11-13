@@ -37,8 +37,11 @@ module "alb_asg_sample" {
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
-  min_size = 1
-  max_size = 2
+  instance_type = var.ec2_lb_instance_type
+  instance_has_ssh = var.ec2_lb_instance_has_ssh
+  instance_key_name = var.ec2_lb_instance_has_ssh ? var.ec2_lb_instance_key_name : null
+  min_size = var.min_size
+  max_size = var.max_size
 }
 
 /*

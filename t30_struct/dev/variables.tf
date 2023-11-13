@@ -39,3 +39,35 @@ variable "ec2_admin_instance_type" {
   description = "The type of EC2 Admin Instances to run (e.g. t3.micro)"
   type        = string
 }
+
+variable "ec2_lb_instance_type" {
+  description = "The type of EC2 ALB ASG Instances to run (e.g. t3.micro)"
+  type        = string
+}
+
+variable "ec2_lb_instance_has_ssh" {
+  description = "If ssh to EC2 ALB ASG instance enabled"
+  type        = bool
+}
+
+variable "ec2_lb_instance_key_name" {
+  description = "The key name for ssh to EC2 ALB ASG Instances"
+  type        = string
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# OPTIONAL PARAMETERS
+# These parameters have reasonable defaults.
+# ---------------------------------------------------------------------------------------------------------------------
+
+variable "min_size" {
+  description = "The minimum number of EC2 Instances in the ASG"
+  type        = number
+  default = 1
+}
+
+variable "max_size" {
+  description = "The maximum number of EC2 Instances in the ASG"
+  type        = number
+  default = 2
+}

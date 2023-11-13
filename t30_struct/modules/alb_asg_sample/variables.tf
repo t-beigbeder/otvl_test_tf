@@ -33,19 +33,21 @@ variable "resource_tags" {
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
   type        = string
-  default = "t3.micro"
+}
+
+variable "instance_has_ssh" {
+  description = "If ssh to EC2 instance enabled"
+  type        = bool
 }
 
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number
-  default = 1
 }
 
 variable "max_size" {
   description = "The maximum number of EC2 Instances in the ASG"
   type        = number
-  default = 2
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -59,3 +61,7 @@ variable "server_port" {
   default     = 8080
 }
 
+variable "instance_key_name" {
+  description = "The key name for ssh to EC2 Instances"
+  type        = string
+}
