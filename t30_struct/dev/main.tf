@@ -31,12 +31,31 @@ module "prereqs" {
   app_has_infra_bucket = var.app_has_infra_bucket
 }
 
+/*
 module "alb_asg_sample" {
   source = "../modules/alb_asg_sample"
   application_code = var.application_code
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
+  instance_ami_name_regex = var.ec2_lb_instance_ami_name_regex
+  instance_ami_owner = var.ec2_lb_instance_ami_owner
+  instance_type = var.ec2_lb_instance_type
+  instance_has_ssh = var.ec2_lb_instance_has_ssh
+  instance_key_name = var.ec2_lb_instance_has_ssh ? var.ec2_lb_instance_key_name : null
+  min_size = var.min_size
+  max_size = var.max_size
+}
+*/
+module "prlb" {
+  source = "../modules/prlb"
+  application_code = var.application_code
+  env_name = var.env_name
+  project_name = var.project_name
+  resource_tags = var.resource_tags
+  ec2_mandatory_policy_name = var.ec2_mandatory_policy_name
+  ami_name_regex = var.ec2_lb_instance_ami_name_regex
+  ami_owner = var.ec2_lb_instance_ami_owner
   instance_type = var.ec2_lb_instance_type
   instance_has_ssh = var.ec2_lb_instance_has_ssh
   instance_key_name = var.ec2_lb_instance_has_ssh ? var.ec2_lb_instance_key_name : null

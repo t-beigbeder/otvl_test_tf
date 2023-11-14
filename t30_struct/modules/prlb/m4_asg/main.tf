@@ -31,16 +31,6 @@ locals {
   }
 }
 
-data "aws_ami" "deb_like_ami" {
-  most_recent = true
-  name_regex  = var.instance_ami_name_regex
-  filter {
-    name   = "architecture"
-    values = ["x86_64"]
-  }
-  owners = var.instance_ami_owner == "" ? null : [var.instance_ami_owner]
-}
-
 data "aws_vpc" "default" {
   default = true
 }
@@ -50,6 +40,12 @@ data "aws_subnets" "default" {
     name   = "vpc-id"
     values = [data.aws_vpc.default.id]
   }
+}
+
+module "get_ami" {
+  source = "../../utils/get_ami"
+  ami_name_regex = var.ami_name_regex
+  ami_owner = var.ami_owner
 }
 
 resource "aws_security_group" "this" {
@@ -79,7 +75,7 @@ resource "aws_security_group_rule" "allow_all_asg_outbound" {
 resource "aws_launch_template" "this" {
   update_default_version = true
   name                   = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-asg-sample-${data.aws_region.current.name}"
-  image_id               = data.aws_ami.deb_like_ami.id
+  image_id               = module.get_ami.ami.id
   instance_type          = var.instance_type
   user_data = base64encode(templatefile("${path.module}/user-data.sh", {
     server_port = var.server_port

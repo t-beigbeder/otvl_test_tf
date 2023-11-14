@@ -30,6 +30,16 @@ variable "resource_tags" {
   }))
 }
 
+variable "instance_ami_name_regex" {
+  description = "The name regex for filtering AMI of EC2 Instances to run (e.g. amzn2-ami-amd)"
+  type        = string
+}
+
+variable "instance_ami_owner" {
+  description = "The owner name or empty for filtering AMI of Instances to run (e.g. 099720109477)"
+  type        = string
+}
+
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
   type        = string

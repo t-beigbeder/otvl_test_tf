@@ -30,11 +30,6 @@ variable "resource_tags" {
   }))
 }
 
-variable "ec2_mandatory_policy_name" {
-  description = "The name or empty of a policy that applies to all EC2 instances"
-  type        = string
-}
-
 variable "ami_name_regex" {
   description = "The name regex for filtering AMI of EC2 Instances to run (e.g. amzn2-ami-amd)"
   type        = string

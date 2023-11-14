@@ -46,9 +46,14 @@ resource_tags = [
 
 ]
 
+ec2_mandatory_policy_name = "policy-sample-ec2-permissions"
+
 ec2_admin_instance_type = "t3.micro"
 
+//ec2_lb_instance_ami_name_regex = "ubuntu-jammy-22.04-amd64-server"
+//ec2_lb_instance_ami_owner = "099720109477"
+ec2_lb_instance_ami_name_regex = "amzn2-ami-amd" # or "ubuntu-jammy-22.04-amd64-server"
+ec2_lb_instance_ami_owner = "" # or "099720109477" for Canonical
 ec2_lb_instance_type = "t3.micro"
-
 ec2_lb_instance_has_ssh = true
 ec2_lb_instance_key_name = "tmp"
