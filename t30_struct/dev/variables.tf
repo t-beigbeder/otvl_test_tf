@@ -35,11 +35,6 @@ variable "resource_tags" {
   }))
 }
 
-variable "ec2_mandatory_policy_name" {
-  description = "The name or empty of a policy that applies to all EC2 instances"
-  type        = string
-}
-
 variable "ec2_admin_instance_type" {
   description = "The type of EC2 Admin Instances to run (e.g. t3.micro)"
   type        = string
@@ -57,6 +52,16 @@ variable "ec2_lb_instance_ami_owner" {
 
 variable "ec2_lb_instance_type" {
   description = "The type of EC2 ALB ASG Instances to run (e.g. t3.micro)"
+  type        = string
+}
+
+variable "ec2_mandatory_policy_name" {
+  description = "The name or empty of a policy that applies to all EC2 instances"
+  type        = string
+}
+
+variable "ec2_mandatory_sg_name" {
+  description = "The name or empty of a role that applies to all EC2 instances"
   type        = string
 }
 

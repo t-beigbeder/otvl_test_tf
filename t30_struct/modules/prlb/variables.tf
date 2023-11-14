@@ -55,6 +55,11 @@ variable "instance_type" {
   type        = string
 }
 
+variable "ec2_mandatory_sg_name" {
+  description = "The name or empty of a role that applies to all EC2 instances"
+  type        = string
+}
+
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number
