@@ -8,26 +8,26 @@ app_has_infra_bucket = true
 
 resource_tags = [
   {
-    key = "managed-by"
-    is_constant = true
-    constant = "opentofu"
+    key                 = "managed-by"
+    is_constant         = true
+    constant            = "opentofu"
     is_application_code = false
-    is_env_name = false
-    is_project_name = false
+    is_env_name         = false
+    is_project_name     = false
   },
   {
-    key =  "corp:billing"
-    is_constant = false
+    key                 = "corp:billing"
+    is_constant         = false
     is_application_code = true
-    is_env_name = false
-    is_project_name = false
+    is_env_name         = false
+    is_project_name     = false
   },
   {
-    key =  "corp:application_code"
-    is_constant = false
+    key                 = "corp:application_code"
+    is_constant         = false
     is_application_code = true
-    is_env_name = false
-    is_project_name = false
+    is_env_name         = false
+    is_project_name     = false
   },
   {
     key                 = "corp:environment"
@@ -37,11 +37,11 @@ resource_tags = [
     is_project_name     = false
   },
   {
-    key =  "app:project"
-    is_constant = false
+    key                 = "app:project"
+    is_constant         = false
     is_application_code = false
-    is_env_name = false
-    is_project_name = true
+    is_env_name         = false
+    is_project_name     = true
   }
 
 ]
@@ -53,7 +53,11 @@ ec2_admin_instance_type = "t3.micro"
 //ec2_lb_instance_ami_name_regex = "ubuntu-jammy-22.04-amd64-server"
 //ec2_lb_instance_ami_owner = "099720109477"
 ec2_lb_instance_ami_name_regex = "amzn2-ami-amd" # or "ubuntu-jammy-22.04-amd64-server"
-ec2_lb_instance_ami_owner = "" # or "099720109477" for Canonical
-ec2_lb_instance_type = "t3.micro"
-ec2_lb_instance_has_ssh = true
-ec2_lb_instance_key_name = "tmp"
+ec2_lb_instance_ami_owner      = ""              # or "099720109477" for Canonical
+ec2_lb_instance_type           = "t3.micro"
+ec2_lb_instance_user_data      = <<-EOF
+    echo "Instance build for application $application_code in env $env_name"
+    id
+    pwd
+  EOF
+ec2_lb_instance_ssh_key_name   = "tmp"

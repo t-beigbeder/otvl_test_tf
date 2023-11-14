@@ -20,13 +20,13 @@ variable "project_name" {
 
 variable "resource_tags" {
   description = "Tags that apply to all resources"
-  type        = list(object({
-    key = string
-    is_constant = bool
-    constant = optional(string)
+  type = list(object({
+    key                 = string
+    is_constant         = bool
+    constant            = optional(string)
     is_application_code = bool
-    is_env_name = bool
-    is_project_name = bool
+    is_env_name         = bool
+    is_project_name     = bool
   }))
 }
 
@@ -43,11 +43,6 @@ variable "ami_owner" {
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
   type        = string
-}
-
-variable "instance_has_ssh" {
-  description = "If ssh to EC2 instance enabled"
-  type        = bool
 }
 
 variable "min_size" {
@@ -71,7 +66,14 @@ variable "server_port" {
   default     = 8080
 }
 
-variable "instance_key_name" {
-  description = "The key name for ssh to EC2 Instances"
+variable "instance_ssh_key_name" {
+  description = "The key name for ssh to EC2 Instances or empty if no ssh"
   type        = string
+  default     = ""
+}
+
+variable "instance_user_data" {
+  description = "User data to be passed to the instance"
+  type        = string
+  default     = null
 }

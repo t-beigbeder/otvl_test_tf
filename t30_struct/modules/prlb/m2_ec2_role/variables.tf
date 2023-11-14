@@ -30,6 +30,11 @@ variable "resource_tags" {
   }))
 }
 
+variable "kms_key_for_infra_arn" {
+  description = "ARN of the KMS key created for infrastructure services"
+  type = string
+}
+
 variable "ec2_mandatory_policy_name" {
   description = "The name or empty of a policy that applies to all EC2 instances"
   type        = string

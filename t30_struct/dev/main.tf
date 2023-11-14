@@ -53,12 +53,13 @@ module "prlb" {
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
+  kms_key_for_infra_arn = module.prereqs.kms_key_for_infra.arn
   ec2_mandatory_policy_name = var.ec2_mandatory_policy_name
   ami_name_regex = var.ec2_lb_instance_ami_name_regex
   ami_owner = var.ec2_lb_instance_ami_owner
   instance_type = var.ec2_lb_instance_type
-  instance_has_ssh = var.ec2_lb_instance_has_ssh
-  instance_key_name = var.ec2_lb_instance_has_ssh ? var.ec2_lb_instance_key_name : null
+  instance_user_data = var.ec2_lb_instance_user_data
+  instance_ssh_key_name = var.ec2_lb_instance_ssh_key_name
   min_size = var.min_size
   max_size = var.max_size
 }

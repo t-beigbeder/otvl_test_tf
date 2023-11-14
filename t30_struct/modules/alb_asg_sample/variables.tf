@@ -74,4 +74,5 @@ variable "server_port" {
 variable "instance_key_name" {
   description = "The key name for ssh to EC2 Instances"
   type        = string
+  default     = ""
 }

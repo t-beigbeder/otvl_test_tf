@@ -60,20 +60,22 @@ variable "ec2_lb_instance_type" {
   type        = string
 }
 
-variable "ec2_lb_instance_has_ssh" {
-  description = "If ssh to EC2 ALB ASG instance enabled"
-  type        = bool
-}
-
-variable "ec2_lb_instance_key_name" {
-  description = "The key name for ssh to EC2 ALB ASG Instances"
-  type        = string
-}
-
 # ---------------------------------------------------------------------------------------------------------------------
 # OPTIONAL PARAMETERS
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
+
+variable "ec2_lb_instance_user_data" {
+  description = "User data to be passed to the instance"
+  type        = string
+  default     = null
+}
+
+variable "ec2_lb_instance_ssh_key_name" {
+  description = "The key name for ssh to EC2 Instances in the ASG or empty if no ssh"
+  type        = string
+  default     = ""
+}
 
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"

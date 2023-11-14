@@ -30,6 +30,11 @@ variable "resource_tags" {
   }))
 }
 
+variable "kms_key_for_infra_arn" {
+  description = "ARN of the KMS key created for infrastructure services"
+  type = string
+}
+
 variable "ec2_mandatory_policy_name" {
   description = "The name or empty of a policy that applies to all EC2 instances"
   type        = string
@@ -48,11 +53,6 @@ variable "ami_owner" {
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
   type        = string
-}
-
-variable "instance_has_ssh" {
-  description = "If ssh to EC2 instance enabled"
-  type        = bool
 }
 
 variable "min_size" {
@@ -76,7 +76,14 @@ variable "server_port" {
   default     = 8080
 }
 
-variable "instance_key_name" {
-  description = "The key name for ssh to EC2 Instances"
+variable "instance_user_data" {
+  description = "User data to be passed to the instance"
   type        = string
+  default     = null
+}
+
+variable "instance_ssh_key_name" {
+  description = "The key name for ssh to EC2 Instances in the ASG or empty if no ssh"
+  type        = string
+  default     = ""
 }
