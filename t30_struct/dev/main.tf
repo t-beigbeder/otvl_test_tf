@@ -47,6 +47,7 @@ module "alb_asg_sample" {
   max_size = var.max_size
 }
 */
+
 module "prlb" {
   source = "../modules/prlb"
   application_code = var.application_code
@@ -61,6 +62,7 @@ module "prlb" {
   instance_ssh_key_name = var.ec2_lb_instance_ssh_key_name
   ec2_mandatory_policy_name = var.ec2_mandatory_policy_name
   ec2_mandatory_sg_name = var.ec2_mandatory_sg_name
+  asg_subnets_name_filter = var.asg_subnets_name_filter
   min_size = var.min_size
   max_size = var.max_size
 }

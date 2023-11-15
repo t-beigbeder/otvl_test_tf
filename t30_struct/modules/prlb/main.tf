@@ -32,6 +32,7 @@ module "m4_asg" {
   instance_ssh_key_name = var.instance_ssh_key_name
   instance_user_data = var.instance_user_data
   ec2_mandatory_sg_name = var.ec2_mandatory_sg_name
+  subnets_name_filter = var.asg_subnets_name_filter
   min_size = var.min_size
   max_size = var.max_size
 }

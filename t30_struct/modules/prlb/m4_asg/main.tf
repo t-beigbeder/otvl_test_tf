@@ -23,6 +23,11 @@ module "get_tags" {
   resource_tags    = var.resource_tags
 }
 
+module "get_subnets" {
+  source = "../../utils/get_subnets"
+  subnets_name_filter = var.subnets_name_filter
+}
+
 locals {
   init_user_data = <<-EOF
     application_code=${var.application_code}
@@ -65,23 +70,12 @@ resource "aws_launch_template" "this" {
   tags = module.get_tags.ready
 }
 
-// FIXME: configurable
-data "aws_vpc" "default" {
-  default = true
-}
-data "aws_subnets" "default" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
-
 resource "aws_autoscaling_group" "this" {
 
   launch_template {
     id = aws_launch_template.this.id
   }
-  vpc_zone_identifier = data.aws_subnets.default.ids
+  vpc_zone_identifier = module.get_subnets.ids
   //target_group_arns    = [aws_lb_target_group.this.arn]
   health_check_type    = "ELB"
 

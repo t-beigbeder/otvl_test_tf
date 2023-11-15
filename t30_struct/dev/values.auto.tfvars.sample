@@ -49,14 +49,40 @@ resource_tags = [
 ec2_admin_instance_type = "t3.micro"
 
 //ec2_lb_instance_ami_name_regex = "ubuntu-jammy-22.04-amd64-server"
-//ec2_lb_instance_ami_owner = "099720109477"
-ec2_lb_instance_ami_name_regex = "amzn2-ami-amd" # or "ubuntu-jammy-22.04-amd64-server"
-ec2_lb_instance_ami_owner      = ""              # or "099720109477" for Canonical
+//ec2_lb_instance_ami_owner = "099720109477" # Canonical
+ec2_lb_instance_ami_name_regex = "amzn2-ami-hvm"
+ec2_lb_instance_ami_owner      = "137112412989" # Amazon
 ec2_lb_instance_type           = "t3.micro"
 ec2_lb_instance_user_data      = <<-EOF
-    echo "(in dev) Instance build for application $application_code in env $env_name"
-    id
-    pwd
+    echo "Instance build for application $application_code in env $env_name"
+    amazon-linux-extras enable nginx1
+    yum clean metadata
+    yum install -y nginx
+    cat > /etc/nginx/conf.d/nginx_ssl.conf <<EOF2
+    server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name _;
+    root /usr/share/nginx/html;
+    ssl_certificate "/etc/ssl/certs/nginx-selfsigned.crt";
+    ssl_certificate_key "/etc/ssl/private/nginx-selfsigned.key";
+    ssl_session_cache shared:SSL:1m;
+    ssl_session_timeout 10m;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_prefer_server_ciphers on;
+    error_page 404 /404.html;
+    location = /40x.html {
+    }
+    error_page 500 502 503 504 /50x.html;
+    location = /50x.html {
+    }
+    }
+    EOF2
+    mkdir /etc/ssl/private
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=EU/ST=FR/L=AWS/O=Nginx/OU=root/CN=`hostname -i`/emailAddress=root@localhost"
+    systemctl enable nginx
+    systemctl start nginx
+    yum install -y amazon-efs-utils
   EOF
 ec2_lb_instance_ssh_key_name   = "tmp"
 

@@ -60,6 +60,11 @@ variable "ec2_mandatory_sg_name" {
   type        = string
 }
 
+variable "asg_subnets_name_filter" {
+  description = "Name filter to get the subnets list to launch ASG resources in"
+  type        = string
+}
+
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number
