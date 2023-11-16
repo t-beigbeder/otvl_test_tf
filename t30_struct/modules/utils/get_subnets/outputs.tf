@@ -22,3 +22,8 @@ output "byname" {
   value       = local.byname
   description = "The map of filtered subnets by tag Name"
 }
+
+output "default_vpc" {
+  value = data.aws_vpc.default
+  description = "The default VPC in this account"
+}
