@@ -30,6 +30,10 @@ locals {
     for v in data.aws_subnet.all : v.id
     if strcontains(lookup(v.tags, "Name", ""), var.subnets_name_filter)
   ]
+  cidrs = [
+    for v in data.aws_subnet.all : v.cidr_block
+    if strcontains(lookup(v.tags, "Name", ""), var.subnets_name_filter)
+  ]
   list = [
     for v in data.aws_subnet.all : v
     if strcontains(lookup(v.tags, "Name", ""), var.subnets_name_filter)

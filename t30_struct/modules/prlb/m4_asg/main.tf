@@ -43,7 +43,11 @@ resource "aws_iam_instance_profile" "this" {
 data "aws_security_group" "ec2_mandatory" {
   name = var.ec2_mandatory_sg_name
 }
-
+/*
+data "aws_security_group" "EFSSecurityGroup" {
+  name = "not_yet" # FIXME:
+}
+*/
 resource "aws_launch_template" "this" {
   update_default_version = true
   name                   = "lt-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-private"
@@ -56,6 +60,7 @@ resource "aws_launch_template" "this" {
   vpc_security_group_ids = [
     # FIXME: add sg restrict alb in
     data.aws_security_group.ec2_mandatory.id
+    # FIXME: add sg enable efs out
   ]
   key_name = var.instance_ssh_key_name == null ? null : var.instance_ssh_key_name
   tag_specifications {
@@ -63,11 +68,11 @@ resource "aws_launch_template" "this" {
       {
         Name = "asg-ec2-${lower(var.application_code)}-${lower(var.env_name)}-private"
       },
-      module.get_tags.ready
+      module.get_tags.tags
     )
     resource_type = "instance"
   }
-  tags = module.get_tags.ready
+  tags = module.get_tags.tags
 }
 
 resource "aws_autoscaling_group" "this" {

@@ -1,4 +1,3 @@
-
 terraform {
   required_version = ">= 1.0.0, < 2.0.0"
 
@@ -10,6 +9,19 @@ terraform {
   }
 }
 
+module "m1_alb" {
+  source = "./m1_alb"
+  application_code = var.application_code
+  env_name = var.env_name
+  project_name = var.project_name
+  resource_tags = var.resource_tags
+  subnets_name_filter = var.asg_subnets_name_filter
+  alb_ingress_cidrs = var.alb_ingress_cidrs
+  alb_ingress_port = var.alb_ingress_port
+  alb_egress_port = var.alb_egress_port
+}
+
+/*
 module "m2_ec2_role" {
   source = "./m2_ec2_role"
   application_code = var.application_code
@@ -36,3 +48,4 @@ module "m4_asg" {
   min_size = var.min_size
   max_size = var.max_size
 }
+*/

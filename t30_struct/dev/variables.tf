@@ -75,6 +75,24 @@ variable "asg_subnets_name_filter" {
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 
+variable "alb_ingress_cidrs" {
+  description = "The list of CIDR ranges to enable as ingress on the ALB, if empty, all IPs are authorized"
+  type = list(string)
+  default = []
+}
+
+variable "alb_ingress_port" {
+  description = "The port to enable as ingress on the ALB"
+  type = number
+  default = 443
+}
+
+variable "alb_egress_port" {
+  description = "The port to enable as egress on the ALB"
+  type = number
+  default = 443
+}
+
 variable "ec2_lb_instance_user_data" {
   description = "User data to be passed to the instance"
   type        = string

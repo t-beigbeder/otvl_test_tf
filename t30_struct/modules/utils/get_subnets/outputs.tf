@@ -3,6 +3,11 @@ output "ids" {
   description = "The list of filtered subnets ids"
 }
 
+output "cidrs" {
+  value       = local.cidrs
+  description = "The list of filtered subnets CIDRs"
+}
+
 output "list" {
   value       = local.list
   description = "The list of filtered subnets"

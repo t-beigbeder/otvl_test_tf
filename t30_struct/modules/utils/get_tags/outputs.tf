@@ -1,4 +1,4 @@
-output "ready" {
+output "tags" {
   value       = merge(
     local.ctags, local.atags, local.etags, local.ptags
   )

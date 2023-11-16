@@ -55,6 +55,9 @@ module "prlb" {
   project_name = var.project_name
   resource_tags = var.resource_tags
   kms_key_for_infra_arn = module.prereqs.kms_key_for_infra.arn
+  alb_ingress_cidrs = var.alb_ingress_cidrs
+  alb_ingress_port = var.alb_ingress_port
+  alb_egress_port = var.alb_egress_port
   ami_name_regex = var.ec2_lb_instance_ami_name_regex
   ami_owner = var.ec2_lb_instance_ami_owner
   instance_type = var.ec2_lb_instance_type
