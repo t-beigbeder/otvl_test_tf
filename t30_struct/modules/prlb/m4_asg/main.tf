@@ -48,6 +48,11 @@ data "aws_security_group" "EFSSecurityGroup" {
   name = "not_yet" # FIXME:
 }
 */
+
+data "aws_security_group" "alb_private_ec2" {
+  name = "secg-${var.application_code}-${var.env_name}-private-ec2"
+}
+
 resource "aws_launch_template" "this" {
   update_default_version = true
   name                   = "lt-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-private"
@@ -58,7 +63,7 @@ resource "aws_launch_template" "this" {
     arn = aws_iam_instance_profile.this.arn
   }
   vpc_security_group_ids = [
-    # FIXME: add sg restrict alb in
+    data.aws_security_group.alb_private_ec2.id,
     data.aws_security_group.ec2_mandatory.id
     # FIXME: add sg enable efs out
   ]
@@ -81,7 +86,7 @@ resource "aws_autoscaling_group" "this" {
     id = aws_launch_template.this.id
   }
   vpc_zone_identifier = module.get_subnets.ids
-  //target_group_arns    = [aws_lb_target_group.this.arn]
+  target_group_arns    = [var.alb_target_group_arn]
   health_check_type    = "ELB"
 
   min_size = var.min_size

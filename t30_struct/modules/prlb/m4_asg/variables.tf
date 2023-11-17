@@ -55,6 +55,11 @@ variable "subnets_name_filter" {
   type        = string
 }
 
+variable "alb_target_group_arn" {
+  description = "The ARN of the ALB target group the ASG should join to"
+  type = string
+}
+
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number

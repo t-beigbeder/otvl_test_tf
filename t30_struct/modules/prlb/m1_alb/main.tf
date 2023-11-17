@@ -82,10 +82,16 @@ resource "aws_lb" "this" {
   tags               = module.get_tags.tags
 }
 
+data "aws_acm_certificate" "this" {
+  domain = "alb.org" # FIXME
+  most_recent = true
+}
+
 resource "aws_lb_listener" "this" {
   load_balancer_arn = aws_lb.this.arn
   port              = var.alb_ingress_port
-  protocol          = "HTTP"
+  protocol          = "HTTPS"
+  certificate_arn = data.aws_acm_certificate.this.arn
   # By default, return a simple 404 page
   default_action {
     type = "fixed-response"
@@ -100,12 +106,12 @@ resource "aws_lb_listener" "this" {
 resource "aws_lb_target_group" "this" {
   name     = "${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-alb-sample"
   port     = var.alb_egress_port
-  protocol = "HTTP"
+  protocol = "HTTPS"
   vpc_id   = module.get_subnets.default_vpc.id
 
   health_check {
     path                = "/"
-    protocol            = "HTTP"
+    protocol            = "HTTPS"
     matcher             = "200"
     interval            = 15
     timeout             = 3

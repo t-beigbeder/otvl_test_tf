@@ -21,7 +21,6 @@ module "m1_alb" {
   alb_egress_port = var.alb_egress_port
 }
 
-/*
 module "m2_ec2_role" {
   source = "./m2_ec2_role"
   application_code = var.application_code
@@ -45,7 +44,7 @@ module "m4_asg" {
   instance_user_data = var.instance_user_data
   ec2_mandatory_sg_name = var.ec2_mandatory_sg_name
   subnets_name_filter = var.asg_subnets_name_filter
+  alb_target_group_arn = module.m1_alb.alb_target_group.arn
   min_size = var.min_size
   max_size = var.max_size
 }
-*/
