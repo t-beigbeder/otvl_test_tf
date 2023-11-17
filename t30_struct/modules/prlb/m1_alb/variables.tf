@@ -35,6 +35,11 @@ variable "subnets_name_filter" {
   type        = string
 }
 
+variable "alb_domain_name" {
+  description = "The DNS domain to reach the ALB (TLS certificate subject)"
+  type        = string
+}
+
 variable "alb_ingress_cidrs" {
   description = "The list of CIDR ranges to enable as ingress on the ALB, if empty, all IPs are authorized"
   type = list(string)

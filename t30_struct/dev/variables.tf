@@ -35,6 +35,11 @@ variable "resource_tags" {
   }))
 }
 
+variable "alb_domain_name" {
+  description = "The DNS domain to reach the ALB (TLS certificate subject)"
+  type        = string
+}
+
 variable "ec2_admin_instance_type" {
   description = "The type of EC2 Admin Instances to run (e.g. t3.micro)"
   type        = string

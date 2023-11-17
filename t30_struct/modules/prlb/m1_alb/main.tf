@@ -83,7 +83,7 @@ resource "aws_lb" "this" {
 }
 
 data "aws_acm_certificate" "this" {
-  domain = "alb.org" # FIXME
+  domain = var.alb_domain_name
   most_recent = true
 }
 

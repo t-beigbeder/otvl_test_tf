@@ -16,6 +16,7 @@ module "m1_alb" {
   project_name = var.project_name
   resource_tags = var.resource_tags
   subnets_name_filter = var.asg_subnets_name_filter
+  alb_domain_name = var.alb_domain_name
   alb_ingress_cidrs = var.alb_ingress_cidrs
   alb_ingress_port = var.alb_ingress_port
   alb_egress_port = var.alb_egress_port
@@ -44,6 +45,7 @@ module "m4_asg" {
   instance_user_data = var.instance_user_data
   ec2_mandatory_sg_name = var.ec2_mandatory_sg_name
   subnets_name_filter = var.asg_subnets_name_filter
+  alb_private_ec2_security_group_id = module.m1_alb.alb_private_ec2_security_group.id
   alb_target_group_arn = module.m1_alb.alb_target_group.arn
   min_size = var.min_size
   max_size = var.max_size

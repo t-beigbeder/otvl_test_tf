@@ -60,6 +60,11 @@ variable "alb_target_group_arn" {
   type = string
 }
 
+variable "alb_private_ec2_security_group_id" {
+  description = "The id of the security group enabling ALB egress to EC2 ingress"
+  type = string
+}
+
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number

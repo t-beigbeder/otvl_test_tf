@@ -49,10 +49,6 @@ data "aws_security_group" "EFSSecurityGroup" {
 }
 */
 
-data "aws_security_group" "alb_private_ec2" {
-  name = "secg-${var.application_code}-${var.env_name}-private-ec2"
-}
-
 resource "aws_launch_template" "this" {
   update_default_version = true
   name                   = "lt-${lower(var.application_code)}-${lower(var.project_name)}-${lower(var.env_name)}-private"
@@ -63,7 +59,7 @@ resource "aws_launch_template" "this" {
     arn = aws_iam_instance_profile.this.arn
   }
   vpc_security_group_ids = [
-    data.aws_security_group.alb_private_ec2.id,
+    var.alb_private_ec2_security_group_id,
     data.aws_security_group.ec2_mandatory.id
     # FIXME: add sg enable efs out
   ]
