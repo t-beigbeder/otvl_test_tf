@@ -10,7 +10,7 @@ terraform {
 }
 
 data "aws_vpc" "default" {
-  default = true
+  default = var.vpc_is_default
 }
 
 data "aws_subnets" "all" {

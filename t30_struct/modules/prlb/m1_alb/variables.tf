@@ -30,6 +30,11 @@ variable "resource_tags" {
   }))
 }
 
+variable "vpc_is_default" {
+  description = "Use default VPC, else only one VPC should be available"
+  type        = bool
+}
+
 variable "subnets_name_filter" {
   description = "Name filter to get the subnets list to launch resources in"
   type        = string

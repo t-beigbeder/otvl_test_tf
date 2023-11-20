@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "default_vpc_id" {
+  description = "The ID of the default VPC to use"
+  type = string
+}
+
 variable "description" {
   description = "The description of the security group, may be null"
   type        = string

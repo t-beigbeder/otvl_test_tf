@@ -8,20 +8,20 @@ terraform {
     }
   }
 }
-/*
+
 module "m1_alb" {
   source = "./m1_alb"
   application_code = var.application_code
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
+  vpc_is_default = var.vpc_is_default
   subnets_name_filter = var.asg_subnets_name_filter
   alb_domain_name = var.alb_domain_name
   alb_ingress_cidrs = var.alb_ingress_cidrs
   alb_ingress_port = var.alb_ingress_port
   alb_egress_port = var.alb_egress_port
 }
-*/
 
 module "m2_ec2_role" {
   source = "./m2_ec2_role"
@@ -50,6 +50,7 @@ module "m4_asg" {
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
+  vpc_is_default = var.vpc_is_default
   ami_name_regex = var.ami_name_regex
   ami_owner = var.ami_owner
   instance_type = var.instance_type

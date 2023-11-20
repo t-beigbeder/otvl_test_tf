@@ -30,6 +30,11 @@ variable "resource_tags" {
   }))
 }
 
+variable "vpc_is_default" {
+  description = "Use default VPC, else only one VPC should be available"
+  type        = bool
+}
+
 variable "kms_key_for_infra_arn" {
   description = "ARN of the KMS key created for infrastructure services"
   type = string

@@ -20,18 +20,18 @@ variable "project_name" {
 
 variable "app_has_infra_bucket" {
   description = "Whether an application S3 bucket for infra code has to be created"
-  type = bool
+  type        = bool
 }
 
 variable "resource_tags" {
   description = "Tags that apply to all resources"
-  type        = list(object({
-    key = string
-    is_constant = bool
-    constant = optional(string)
+  type = list(object({
+    key                 = string
+    is_constant         = bool
+    constant            = optional(string)
     is_application_code = bool
-    is_env_name = bool
-    is_project_name = bool
+    is_env_name         = bool
+    is_project_name     = bool
   }))
 }
 
@@ -80,22 +80,28 @@ variable "asg_subnets_name_filter" {
 # These parameters have reasonable defaults.
 # ---------------------------------------------------------------------------------------------------------------------
 
+variable "vpc_is_default" {
+  description = "Use default VPC, else only one VPC should be available"
+  type        = bool
+  default     = false
+}
+
 variable "alb_ingress_cidrs" {
   description = "The list of CIDR ranges to enable as ingress on the ALB, if empty, all IPs are authorized"
-  type = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 variable "alb_ingress_port" {
   description = "The port to enable as ingress on the ALB"
-  type = number
-  default = 443
+  type        = number
+  default     = 443
 }
 
 variable "alb_egress_port" {
   description = "The port to enable as egress on the ALB"
-  type = number
-  default = 443
+  type        = number
+  default     = 443
 }
 
 variable "ec2_lb_instance_user_data" {
@@ -113,11 +119,11 @@ variable "ec2_lb_instance_ssh_key_name" {
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number
-  default = 1
+  default     = 1
 }
 
 variable "max_size" {
   description = "The maximum number of EC2 Instances in the ASG"
   type        = number
-  default = 2
+  default     = 2
 }

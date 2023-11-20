@@ -54,6 +54,7 @@ module "prlb" {
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
+  vpc_is_default = var.vpc_is_default
   kms_key_for_infra_arn = module.prereqs.kms_key_for_infra.arn
   alb_domain_name = var.alb_domain_name
   alb_ingress_cidrs = var.alb_ingress_cidrs

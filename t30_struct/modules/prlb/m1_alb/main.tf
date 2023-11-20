@@ -20,6 +20,7 @@ module "get_tags" {
 module "get_subnets" {
   source              = "../../utils/get_subnets"
   subnets_name_filter = var.subnets_name_filter
+  vpc_is_default = var.vpc_is_default
 }
 
 locals {
@@ -31,6 +32,7 @@ locals {
 module "sg_alb_in_out" {
   source = "../../utils/mk_sg"
   name   = "secg-${var.application_code}-${var.env_name}-private-alb"
+  default_vpc_id = module.get_subnets.default_vpc.id
   ingress_rules = [{
     from_port          = var.alb_ingress_port
     to_port            = var.alb_ingress_port
@@ -63,6 +65,7 @@ module "sg_alb_in_out" {
 module "sg_ec2_in" {
   source = "../../utils/mk_sg"
   name   = "secg-${var.application_code}-${var.env_name}-private-ec2"
+  default_vpc_id = module.get_subnets.default_vpc.id
   ingress_rules = [{
     from_port          = var.alb_egress_port
     to_port            = var.alb_egress_port

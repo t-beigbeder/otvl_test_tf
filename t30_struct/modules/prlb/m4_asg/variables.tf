@@ -30,6 +30,11 @@ variable "resource_tags" {
   }))
 }
 
+variable "vpc_is_default" {
+  description = "Use default VPC, else only one VPC should be available"
+  type        = bool
+}
+
 variable "ami_name_regex" {
   description = "The name regex for filtering AMI of EC2 Instances to run (e.g. amzn2-ami-amd)"
   type        = string

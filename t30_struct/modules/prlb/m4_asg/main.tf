@@ -26,6 +26,7 @@ module "get_tags" {
 module "get_subnets" {
   source = "../../utils/get_subnets"
   subnets_name_filter = var.subnets_name_filter
+  vpc_is_default = var.vpc_is_default
 }
 
 locals {
