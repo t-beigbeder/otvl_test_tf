@@ -39,11 +39,14 @@ module "m3_efs" {
   env_name = var.env_name
   project_name = var.project_name
   resource_tags = var.resource_tags
+  vpc_is_default = var.vpc_is_default
   kms_key_for_infra_arn = var.kms_key_for_infra_arn
   role_ec2_to_s3_kms_efs_arn = module.m2_ec2_role.role_ec2_to_s3_kms_efs_arn
   subnets_name_filter = var.asg_subnets_name_filter
+  ec2_mandatory_sg_name = var.ec2_mandatory_sg_name
+  alb_private_ec2_security_group_id = module.m1_alb.alb_private_ec2_security_group.id
 }
-/*
+
 module "m4_asg" {
   source = "./m4_asg"
   application_code = var.application_code
@@ -59,8 +62,8 @@ module "m4_asg" {
   ec2_mandatory_sg_name = var.ec2_mandatory_sg_name
   subnets_name_filter = var.asg_subnets_name_filter
   alb_private_ec2_security_group_id = module.m1_alb.alb_private_ec2_security_group.id
+  efs_mount_target_security_group_id = module.m3_efs.efs_mount_target_security_group.id
   alb_target_group_arn = module.m1_alb.alb_target_group.arn
   min_size = var.min_size
   max_size = var.max_size
 }
-*/

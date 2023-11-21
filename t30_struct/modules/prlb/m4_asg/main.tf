@@ -44,11 +44,6 @@ resource "aws_iam_instance_profile" "this" {
 data "aws_security_group" "ec2_mandatory" {
   name = var.ec2_mandatory_sg_name
 }
-/*
-data "aws_security_group" "EFSSecurityGroup" {
-  name = "not_yet" # FIXME:
-}
-*/
 
 resource "aws_launch_template" "this" {
   update_default_version = true
@@ -62,7 +57,6 @@ resource "aws_launch_template" "this" {
   vpc_security_group_ids = [
     var.alb_private_ec2_security_group_id,
     data.aws_security_group.ec2_mandatory.id
-    # FIXME: add sg enable efs out
   ]
   key_name = var.instance_ssh_key_name == null ? null : var.instance_ssh_key_name
   tag_specifications {

@@ -70,6 +70,11 @@ variable "alb_private_ec2_security_group_id" {
   type = string
 }
 
+variable "efs_mount_target_security_group_id" {
+  description = "The id of the security group enabling EFS ingress from ASG EC2"
+  type = string
+}
+
 variable "min_size" {
   description = "The minimum number of EC2 Instances in the ASG"
   type        = number
