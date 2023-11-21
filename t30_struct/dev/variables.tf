@@ -110,6 +110,18 @@ variable "ec2_lb_instance_user_data" {
   default     = null
 }
 
+variable "ebs_volume_type" {
+  description = "Type of the volume for EC2 instances EBS"
+  type = string
+  default = "gp2"
+}
+
+variable "ebs_volume_size" {
+  description = "Size of the volume for EC2 instances EBS"
+  type = number
+  default = 100
+}
+
 variable "ec2_lb_instance_ssh_key_name" {
   description = "The key name for ssh to EC2 Instances in the ASG or empty if no ssh"
   type        = string

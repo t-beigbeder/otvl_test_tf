@@ -35,6 +35,11 @@ variable "vpc_is_default" {
   type        = bool
 }
 
+variable "kms_key_for_infra_arn" {
+  description = "ARN of the KMS key created for infrastructure services"
+  type = string
+}
+
 variable "ami_name_regex" {
   description = "The name regex for filtering AMI of EC2 Instances to run (e.g. amzn2-ami-amd)"
   type        = string
@@ -48,6 +53,16 @@ variable "ami_owner" {
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
   type        = string
+}
+
+variable "ebs_volume_type" {
+  description = "Type of the volume for EC2 instances EBS"
+  type = string
+}
+
+variable "ebs_volume_size" {
+  description = "Size of the volume for EC2 instances EBS"
+  type = number
 }
 
 variable "ec2_mandatory_sg_name" {
@@ -67,11 +82,6 @@ variable "alb_target_group_arn" {
 
 variable "alb_private_ec2_security_group_id" {
   description = "The id of the security group enabling ALB egress to EC2 ingress"
-  type = string
-}
-
-variable "efs_mount_target_security_group_id" {
-  description = "The id of the security group enabling EFS ingress from ASG EC2"
   type = string
 }
 

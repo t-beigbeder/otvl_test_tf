@@ -59,6 +59,16 @@ resource "aws_launch_template" "this" {
     data.aws_security_group.ec2_mandatory.id
   ]
   key_name = var.instance_ssh_key_name == null ? null : var.instance_ssh_key_name
+  block_device_mappings {
+    device_name = "/dev/sdb"
+    ebs {
+      volume_type = var.ebs_volume_type
+      volume_size = var.ebs_volume_size
+      delete_on_termination = "true"
+      encrypted = "true"
+      kms_key_id = var.kms_key_for_infra_arn
+    }
+  }
   tag_specifications {
     tags = merge(
       {
@@ -72,18 +82,41 @@ resource "aws_launch_template" "this" {
 }
 
 resource "aws_autoscaling_group" "this" {
-
+  name = "asg-${lower(var.application_code)}-${lower(var.env_name)}-private"
   launch_template {
     id = aws_launch_template.this.id
   }
   vpc_zone_identifier = module.get_subnets.ids
   target_group_arns    = [var.alb_target_group_arn]
-  health_check_type    = "ELB"
 
+  health_check_type    = "ELB"
+  termination_policies = ["NewestInstance"]
+  metrics_granularity = "1Minute"
   min_size = var.min_size
   max_size = var.max_size
+  desired_capacity = var.min_size
+
+  instance_refresh {
+    strategy = "Rolling"
+  }
 
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "aws_autoscaling_policy" "scale_up" {
+  autoscaling_group_name = aws_autoscaling_group.this.name
+  name = "asg-scaleup-${lower(var.application_code)}-${lower(var.env_name)}-private"
+  adjustment_type = "ChangeInCapacity"
+  scaling_adjustment = "+1"
+  cooldown = 300
+}
+
+resource "aws_autoscaling_policy" "scale_down" {
+  autoscaling_group_name = aws_autoscaling_group.this.name
+  name = "asg-scaledown-${lower(var.application_code)}-${lower(var.env_name)}-private"
+  adjustment_type = "ChangeInCapacity"
+  scaling_adjustment = "-1"
+  cooldown = 300
 }

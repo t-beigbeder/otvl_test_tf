@@ -80,6 +80,16 @@ variable "instance_type" {
   type        = string
 }
 
+variable "ebs_volume_type" {
+  description = "Type of the volume for EC2 instances EBS"
+  type = string
+}
+
+variable "ebs_volume_size" {
+  description = "Size of the volume for EC2 instances EBS"
+  type = number
+}
+
 variable "ec2_mandatory_sg_name" {
   description = "The name or empty of a role that applies to all EC2 instances"
   type        = string

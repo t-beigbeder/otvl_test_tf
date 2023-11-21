@@ -91,3 +91,4 @@ ec2_lb_instance_ssh_key_name   = "tmp"
 ec2_mandatory_policy_name = "policy-sample-ec2-permissions"
 ec2_mandatory_sg_name = "sample-instance-dbg"
 asg_subnets_name_filter = "-default-"
+ebs_volume_size = 8

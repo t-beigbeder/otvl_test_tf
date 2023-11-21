@@ -64,6 +64,8 @@ module "prlb" {
   ami_owner = var.ec2_lb_instance_ami_owner
   instance_type = var.ec2_lb_instance_type
   instance_user_data = var.ec2_lb_instance_user_data
+  ebs_volume_type = var.ebs_volume_type
+  ebs_volume_size = var.ebs_volume_size
   instance_ssh_key_name = var.ec2_lb_instance_ssh_key_name
   ec2_mandatory_policy_name = var.ec2_mandatory_policy_name
   ec2_mandatory_sg_name = var.ec2_mandatory_sg_name
