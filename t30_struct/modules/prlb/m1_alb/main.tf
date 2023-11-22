@@ -20,7 +20,7 @@ module "get_tags" {
 module "get_subnets" {
   source              = "../../utils/get_subnets"
   subnets_name_filter = var.subnets_name_filter
-  vpc_is_default = var.vpc_is_default
+  vpc_is_default      = var.vpc_is_default
 }
 
 locals {
@@ -30,8 +30,8 @@ locals {
 }
 
 module "sg_alb_in_out" {
-  source = "../../utils/mk_sg"
-  name   = "secg-${var.application_code}-${var.env_name}-private-alb"
+  source         = "../../utils/mk_sg"
+  name           = "secg-${var.application_code}-${var.env_name}-private-alb"
   default_vpc_id = module.get_subnets.default_vpc.id
   ingress_rules = [{
     from_port          = var.alb_ingress_port
@@ -63,8 +63,8 @@ module "sg_alb_in_out" {
 }
 
 module "sg_ec2_in" {
-  source = "../../utils/mk_sg"
-  name   = "secg-${var.application_code}-${var.env_name}-private-ec2"
+  source         = "../../utils/mk_sg"
+  name           = "secg-${var.application_code}-${var.env_name}-private-ec2"
   default_vpc_id = module.get_subnets.default_vpc.id
   ingress_rules = [{
     from_port          = var.alb_egress_port
@@ -80,13 +80,14 @@ module "sg_ec2_in" {
 resource "aws_lb" "this" {
   name               = "alb-${var.application_code}-${var.env_name}-private"
   load_balancer_type = "application"
+  internal           = true
   subnets            = module.get_subnets.ids
   security_groups    = [module.sg_alb_in_out.security_group.id]
   tags               = module.get_tags.tags
 }
 
 data "aws_acm_certificate" "this" {
-  domain = var.alb_domain_name
+  domain      = var.alb_domain_name
   most_recent = true
 }
 
@@ -94,7 +95,7 @@ resource "aws_lb_listener" "this" {
   load_balancer_arn = aws_lb.this.arn
   port              = var.alb_ingress_port
   protocol          = "HTTPS"
-  certificate_arn = data.aws_acm_certificate.this.arn
+  certificate_arn   = data.aws_acm_certificate.this.arn
   # By default, return a simple 404 page
   default_action {
     type = "fixed-response"
