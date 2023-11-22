@@ -31,6 +31,12 @@ locals {
   }
 }
 
+resource "aws_iam_service_linked_role" "role_for_asg" {
+  aws_service_name = "autoscaling.amazonaws.com"
+  custom_suffix    = lower(var.application_code)
+  description      = "Allows EC2 Auto Scaling to use or manage AWS services and resources on your behalf."
+}
+
 # Creates a KMS Customer Managed Key including rotation, related Alias and key policy.
 # The key policy grants Encrypt/Decrypt/GenerateKeys...
 # to the root account, to S3 service, Lambda, Cloudwatch Events and ASG.
@@ -113,7 +119,7 @@ resource "aws_kms_key_policy" "kms_key_for_infra" {
         "Sid" : "ASGCryptDecrypt",
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/${aws_iam_service_linked_role.role_for_asg.name}"
         },
         "Action" : [
           "kms:Encrypt",
@@ -128,7 +134,7 @@ resource "aws_kms_key_policy" "kms_key_for_infra" {
         "Sid" : "ASG Allow attachment of persistent resources",
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/${aws_iam_service_linked_role.role_for_asg.name}"
         },
         "Action" : "kms:CreateGrant",
         "Resource" : "*",
