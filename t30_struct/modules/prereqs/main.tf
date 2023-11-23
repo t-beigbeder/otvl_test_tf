@@ -31,6 +31,7 @@ locals {
   }
 }
 
+# see https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-service-linked-role.html
 resource "aws_iam_service_linked_role" "role_for_asg" {
   aws_service_name = "autoscaling.amazonaws.com"
   custom_suffix    = lower(var.application_code)
@@ -40,7 +41,6 @@ resource "aws_iam_service_linked_role" "role_for_asg" {
 # Creates a KMS Customer Managed Key including rotation, related Alias and key policy.
 # The key policy grants Encrypt/Decrypt/GenerateKeys...
 # to the root account, to S3 service, Lambda, Cloudwatch Events and ASG.
-
 resource "aws_kms_key" "kms_key_for_infra" {
   description         = "KMS symmetric Key used for EBS, RDS and S3 encryption"
   enable_key_rotation = true
@@ -56,6 +56,8 @@ resource "aws_kms_alias" "kms_alias_for_infra" {
   name          = "alias/kms-key-${lower(var.application_code)}-${var.env_name}-${data.aws_region.current.name}"
 }
 
+# Concerning AWSServiceRoleForAutoScaling,
+# see https://docs.aws.amazon.com/autoscaling/ec2/userguide/key-policy-requirements-EBS-encryption.html
 resource "aws_kms_key_policy" "kms_key_for_infra" {
   key_id = aws_kms_key.kms_key_for_infra.id
   policy = jsonencode({
@@ -119,7 +121,7 @@ resource "aws_kms_key_policy" "kms_key_for_infra" {
         "Sid" : "ASGCryptDecrypt",
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/${aws_iam_service_linked_role.role_for_asg.name}"
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
         },
         "Action" : [
           "kms:Encrypt",
@@ -134,7 +136,7 @@ resource "aws_kms_key_policy" "kms_key_for_infra" {
         "Sid" : "ASG Allow attachment of persistent resources",
         "Effect" : "Allow",
         "Principal" : {
-          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/${aws_iam_service_linked_role.role_for_asg.name}"
+          "AWS" : "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
         },
         "Action" : "kms:CreateGrant",
         "Resource" : "*",

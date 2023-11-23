@@ -40,6 +40,11 @@ variable "subnets_name_filter" {
   type        = string
 }
 
+variable "alb_is_internal" {
+  description = "Keep ALB access internal, set to false to test public access"
+  type        = bool
+}
+
 variable "alb_domain_name" {
   description = "The DNS domain to reach the ALB (TLS certificate subject)"
   type        = string

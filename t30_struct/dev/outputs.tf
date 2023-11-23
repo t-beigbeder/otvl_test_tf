@@ -1,8 +1,3 @@
-output "role_for_asg_name" {
-  value       = module.prereqs.role_for_asg_name
-  description = "The name of the role created for the ASG"
-}
-
 output "kms_key_for_infra_arn" {
   value = module.prereqs.kms_key_for_infra.arn
   description = "The ARN of the KMS key created for infrastructure services"

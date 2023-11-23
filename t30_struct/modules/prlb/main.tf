@@ -17,6 +17,7 @@ module "m1_alb" {
   resource_tags = var.resource_tags
   vpc_is_default = var.vpc_is_default
   subnets_name_filter = var.asg_subnets_name_filter
+  alb_is_internal = var.alb_is_internal
   alb_domain_name = var.alb_domain_name
   alb_ingress_cidrs = var.alb_ingress_cidrs
   alb_ingress_port = var.alb_ingress_port
@@ -68,4 +69,14 @@ module "m4_asg" {
   alb_target_group_arn = module.m1_alb.alb_target_group.arn
   min_size = var.min_size
   max_size = var.max_size
+}
+
+module "m5_rec_set" {
+  source = "./m5_rec_set"
+  count = var.hosted_zone_name == "zone.name.org" ? 0 : 1
+  hosted_zone_name = var.hosted_zone_name
+  hosted_zone_is_private = var.hosted_zone_is_private
+  alb_domain_name = var.alb_domain_name
+  alb_zone_id = module.m1_alb.alb_zone_id
+  alb_dns_name = module.m1_alb.alb_dns_name
 }

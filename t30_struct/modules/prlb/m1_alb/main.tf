@@ -80,7 +80,7 @@ module "sg_ec2_in" {
 resource "aws_lb" "this" {
   name               = "alb-${var.application_code}-${var.env_name}-private"
   load_balancer_type = "application"
-  internal           = true
+  internal           = var.alb_is_internal
   subnets            = module.get_subnets.ids
   security_groups    = [module.sg_alb_in_out.security_group.id]
   tags               = module.get_tags.tags

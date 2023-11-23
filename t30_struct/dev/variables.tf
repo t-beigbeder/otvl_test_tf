@@ -35,6 +35,16 @@ variable "resource_tags" {
   }))
 }
 
+variable "hosted_zone_name" {
+  description = "The DNS domain of the hosted zone of the account"
+  type        = string
+}
+
+variable "hosted_zone_is_private" {
+  description = "Private status of the hosted zone of the account"
+  type        = bool
+}
+
 variable "alb_domain_name" {
   description = "The DNS domain to reach the ALB (TLS certificate subject)"
   type        = string
@@ -86,6 +96,12 @@ variable "vpc_is_default" {
   default     = false
 }
 
+variable "alb_is_internal" {
+  description = "Keep ALB access internal, set to false to test public access"
+  type        = bool
+  default     = true
+}
+
 variable "alb_ingress_cidrs" {
   description = "The list of CIDR ranges to enable as ingress on the ALB, if empty, all IPs are authorized"
   type        = list(string)
@@ -112,14 +128,14 @@ variable "ec2_lb_instance_user_data" {
 
 variable "ebs_volume_type" {
   description = "Type of the volume for EC2 instances EBS"
-  type = string
-  default = "gp2"
+  type        = string
+  default     = "gp2"
 }
 
 variable "ebs_volume_size" {
   description = "Size of the volume for EC2 instances EBS"
-  type = number
-  default = 100
+  type        = number
+  default     = 100
 }
 
 variable "ec2_lb_instance_ssh_key_name" {

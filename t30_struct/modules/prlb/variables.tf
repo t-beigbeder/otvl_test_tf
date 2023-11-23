@@ -20,13 +20,13 @@ variable "project_name" {
 
 variable "resource_tags" {
   description = "Tags that apply to all resources"
-  type        = list(object({
-    key = string
-    is_constant = bool
-    constant = optional(string)
+  type = list(object({
+    key                 = string
+    is_constant         = bool
+    constant            = optional(string)
     is_application_code = bool
-    is_env_name = bool
-    is_project_name = bool
+    is_env_name         = bool
+    is_project_name     = bool
   }))
 }
 
@@ -37,7 +37,22 @@ variable "vpc_is_default" {
 
 variable "kms_key_for_infra_arn" {
   description = "ARN of the KMS key created for infrastructure services"
-  type = string
+  type        = string
+}
+
+variable "hosted_zone_name" {
+  description = "The DNS domain of the hosted zone of the account"
+  type        = string
+}
+
+variable "hosted_zone_is_private" {
+  description = "Private status of the hosted zone of the account"
+  type        = bool
+}
+
+variable "alb_is_internal" {
+  description = "Keep ALB access internal, set to false to test public access"
+  type        = bool
 }
 
 variable "alb_domain_name" {
@@ -47,17 +62,17 @@ variable "alb_domain_name" {
 
 variable "alb_ingress_cidrs" {
   description = "The list of CIDR ranges to enable as ingress on the ALB, if empty, all IPs are authorized"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "alb_ingress_port" {
   description = "The port to enable as ingress on the ALB"
-  type = number
+  type        = number
 }
 
 variable "alb_egress_port" {
   description = "The port to enable as egress on the ALB"
-  type = number
+  type        = number
 }
 
 variable "ec2_mandatory_policy_name" {
@@ -82,12 +97,12 @@ variable "instance_type" {
 
 variable "ebs_volume_type" {
   description = "Type of the volume for EC2 instances EBS"
-  type = string
+  type        = string
 }
 
 variable "ebs_volume_size" {
   description = "Size of the volume for EC2 instances EBS"
-  type = number
+  type        = number
 }
 
 variable "ec2_mandatory_sg_name" {

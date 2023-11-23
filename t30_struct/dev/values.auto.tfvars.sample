@@ -46,7 +46,10 @@ resource_tags = [
 
 ]
 
-alb_domain_name = "alb.org"
+hosted_zone_name = "aws.otvl.org"
+hosted_zone_is_private = false
+alb_is_internal = false
+alb_domain_name = "alb.aws.otvl.org"
 
 ec2_admin_instance_type = "t3.micro"
 

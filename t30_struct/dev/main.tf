@@ -56,6 +56,9 @@ module "prlb" {
   resource_tags = var.resource_tags
   vpc_is_default = var.vpc_is_default
   kms_key_for_infra_arn = module.prereqs.kms_key_for_infra.arn
+  hosted_zone_name = var.hosted_zone_name
+  hosted_zone_is_private = var.hosted_zone_is_private
+  alb_is_internal = var.alb_is_internal
   alb_domain_name = var.alb_domain_name
   alb_ingress_cidrs = var.alb_ingress_cidrs
   alb_ingress_port = var.alb_ingress_port
