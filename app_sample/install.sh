@@ -76,6 +76,7 @@ install_docker() {
 
 st=0
 region=$1
+export region
 info "starting"
 true && \
   run_command pwd && \
