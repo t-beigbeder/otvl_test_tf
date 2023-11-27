@@ -67,7 +67,7 @@ EOF2
 }
 
 install_docker() {
-  run_command amazon-linux-extras install docker && \
+  run_command amazon-linux-extras install -y docker && \
   run_command usermod -a -G docker aws_install && \
   run_command systemctl enable docker && \
   run_command systemctl start docker && \
@@ -83,6 +83,7 @@ true && \
   run_command id && \
   run_command mount_efs $region && \
   run_command install_nginx && \
+  run_command install_docker && \
   true || (info failed && exit 1)
 st=$?
 info "ended"
