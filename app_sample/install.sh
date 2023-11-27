@@ -29,7 +29,6 @@ run_command() {
 }
 
 mount_efs() {
-  region=$1
   fsid=`aws --region $region efs describe-file-systems |grep FileSystemId|cut -d'"' -f4`
   run_command aws --region $region efs describe-file-systems && \
   run_command mkdir /srv/efs && \
@@ -60,7 +59,7 @@ install_nginx() {
 EOF2
 
     run_command ls -l /etc/nginx/conf.d/nginx_ssl.conf && \
-    run_command mkdir /etc/ssl/private && \
+    run_command mkdir -p /etc/ssl/private && \
     run_command openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=EU/ST=FR/L=AWS/O=Nginx/OU=root/CN=`hostname -i`/emailAddress=root@localhost" && \
     systemctl enable nginx && \
     systemctl start nginx && \
@@ -77,6 +76,7 @@ install_docker() {
 
 st=0
 region=$1
+export region
 info "starting"
 true && \
   run_command pwd && \
