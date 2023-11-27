@@ -68,7 +68,7 @@ EOF2
 
 install_docker() {
   run_command amazon-linux-extras install -y docker && \
-  run_command usermod -a -G docker aws_install && \
+  #run_command usermod -a -G docker aws_install && \
   run_command systemctl enable docker && \
   run_command systemctl start docker && \
   true
