@@ -30,6 +30,7 @@ run_command() {
 
 mount_efs() {
   fsid=`aws --region $region efs describe-file-systems |grep FileSystemId|cut -d'"' -f4`
+  run_command aws --region $region efs describe-file-systems && \
   run_command mkdir /srv/efs && \
   run_command mount -t efs -o tls -o iam $fsid /srv/efs && \
   true
