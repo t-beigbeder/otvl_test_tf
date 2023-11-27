@@ -29,6 +29,7 @@ run_command() {
 }
 
 mount_efs() {
+  region=$1
   fsid=`aws --region $region efs describe-file-systems |grep FileSystemId|cut -d'"' -f4`
   run_command aws --region $region efs describe-file-systems && \
   run_command mkdir /srv/efs && \
@@ -76,12 +77,11 @@ install_docker() {
 
 st=0
 region=$1
-export region
 info "starting"
 true && \
   run_command pwd && \
   run_command id && \
-  run_command mount_efs && \
+  run_command mount_efs $region && \
   run_command install_nginx && \
   true || (info failed && exit 1)
 st=$?
