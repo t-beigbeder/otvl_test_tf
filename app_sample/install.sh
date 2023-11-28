@@ -56,8 +56,8 @@ install_nginx() {
       error_page 500 502 503 504 /50x.html;
       location = /50x.html {
       }
-      location = / {
-        proxy_pass http://localhost:8080;
+      location = /bokeh {
+        proxy_pass http://localhost:8080/bokeh;
         proxy_buffering off;
       }
     }

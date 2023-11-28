@@ -15,4 +15,4 @@ ADD shell/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 USER guest:guest
 
-ENTRYPOINT /entrypoint.sh /venv/bin/bokeh serve bokeh_sample.py
+ENTRYPOINT /entrypoint.sh /venv/bin/bokeh serve bokeh_sample.py --prefix=/bokeh
