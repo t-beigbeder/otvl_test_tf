@@ -56,8 +56,14 @@ install_nginx() {
       error_page 500 502 503 504 /50x.html;
       location = /50x.html {
       }
-      location = /bokeh_sample {
-        proxy_pass http://localhost:8080/bokeh_sample;
+      location = / {
+        proxy_pass http://localhost:8080;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host:$server_port;
+        proxy_buffering off;
       }
     }
 EOF2
