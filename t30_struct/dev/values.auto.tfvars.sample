@@ -59,7 +59,6 @@ ec2_lb_instance_ami_name_regex = "amzn2-ami-hvm"
 ec2_lb_instance_ami_owner      = "137112412989" # Amazon
 ec2_lb_instance_type           = "t3.micro"
 ec2_lb_instance_user_data      = <<-EOF
-    echo "Instance build for application $application_code in env $env_name"
     amazon-linux-extras enable nginx1
     yum clean metadata
     yum install -y nginx git amazon-efs-utils

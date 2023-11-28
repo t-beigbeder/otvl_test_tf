@@ -56,10 +56,14 @@ install_nginx() {
       error_page 500 502 503 504 /50x.html;
       location = /50x.html {
       }
-      location = / {
+      location / {
+              try_files $uri $uri/ @proxy;
+      }
+      location @proxy {
         proxy_pass http://localhost:8080;
         proxy_buffering off;
       }
+    }
     }
 EOF2
 
