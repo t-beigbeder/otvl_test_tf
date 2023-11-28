@@ -31,8 +31,9 @@ run_command() {
 mount_efs() {
   fsid=`aws --region $region efs describe-file-systems |grep FileSystemId|cut -d'"' -f4`
   run_command aws --region $region efs describe-file-systems && \
-  run_command mkdir /srv/efs && \
-  run_command mount -t efs -o tls -o iam $fsid /srv/efs && \
+  run_command mkdir -p /srv/efs && \
+  echo "$fsid:/ /srv/efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab && \
+  run_command mount /srv/efs && \
   true
 }
 
@@ -55,6 +56,9 @@ install_nginx() {
       error_page 500 502 503 504 /50x.html;
       location = /50x.html {
       }
+      location = /bokeh_sample {
+        proxy_pass http://localhost:8080/bokeh_sample;
+      }
     }
 EOF2
 
@@ -68,9 +72,15 @@ EOF2
 
 install_docker() {
   run_command amazon-linux-extras install -y docker && \
-  #run_command usermod -a -G docker aws_install && \
   run_command systemctl enable docker && \
   run_command systemctl start docker && \
+  true
+}
+
+install_app_sample() {
+  run_command pip3 install urllib3==1.26.6 docker-compose && \
+  run_command cd $cmd_dir/bokeh_sample && \
+  run_command docker-compose -f docker-compose.yml up -d --build && \
   true
 }
 
@@ -79,11 +89,10 @@ region=$1
 export region
 info "starting"
 true && \
-  run_command pwd && \
-  run_command id && \
   run_command mount_efs $region && \
   run_command install_nginx && \
   run_command install_docker && \
+  run_command install_app_sample && \
   true || (info failed && exit 1)
 st=$?
 info "ended"
