@@ -33,8 +33,8 @@ mount_efs() {
   run_command aws --region $region efs describe-file-systems && \
   run_command mkdir -p /srv/efs && \
   echo "$fsid:/ /srv/efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab && \
-  run_command mount /srv/efs && \
   true
+  run_command mount /srv/efs
 }
 
 install_nginx() {
@@ -58,11 +58,6 @@ install_nginx() {
       }
       location = / {
         proxy_pass http://localhost:8080;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_http_version 1.1;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host:$server_port;
         proxy_buffering off;
       }
     }
@@ -88,6 +83,7 @@ install_app_sample() {
   run_command cd $cmd_dir/bokeh_sample && \
   run_command docker-compose -f docker-compose.yml up -d --build && \
   true
+  # FIXME: should install docker run as a systemd service
 }
 
 st=0
