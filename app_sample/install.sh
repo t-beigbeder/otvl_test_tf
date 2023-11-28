@@ -57,13 +57,12 @@ install_nginx() {
       location = /50x.html {
       }
       location / {
-              try_files $uri $uri/ @proxy;
+              try_files \$uri \$uri/ @proxy;
       }
       location @proxy {
         proxy_pass http://localhost:8080;
         proxy_buffering off;
       }
-    }
     }
 EOF2
 
