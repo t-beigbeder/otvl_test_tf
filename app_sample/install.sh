@@ -28,15 +28,6 @@ run_command() {
     "$@" || (error "while running command \"$*\"" && return 1)
 }
 
-mount_efs() {
-  fsid=`aws --region $region efs describe-file-systems |grep FileSystemId|cut -d'"' -f4`
-  run_command aws --region $region efs describe-file-systems && \
-  run_command mkdir -p /srv/efs && \
-  echo "$fsid:/ /srv/efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab && \
-  true
-  run_command mount /srv/efs
-}
-
 install_nginx() {
     cat > /etc/nginx/conf.d/nginx_ssl.conf <<EOF2
     server {
@@ -89,15 +80,25 @@ install_app_sample() {
   # FIXME: should install docker run as a systemd service
 }
 
+mount_efs() {
+  fsid=`aws --region $region efs describe-file-systems |grep FileSystemId|cut -d'"' -f4`
+  run_command aws --region $region efs describe-file-systems && \
+  run_command mkdir -p /srv/efs && \
+  echo "$fsid:/ /srv/efs efs _netdev,noresvport,tls,iam 0 0" >> /etc/fstab && \
+  true
+  run_command mount /srv/efs
+  true
+}
+
 st=0
 region=$1
 export region
 info "starting"
 true && \
-  run_command mount_efs $region && \
   run_command install_nginx && \
   run_command install_docker && \
   run_command install_app_sample && \
+  run_command mount_efs $region && \
   true || (info failed && exit 1)
 st=$?
 info "ended"
