@@ -14,5 +14,6 @@ WORKDIR /python
 ADD shell/entrypoint.sh /
 RUN chmod +x /entrypoint.sh
 USER guest:guest
-
-ENTRYPOINT /entrypoint.sh /venv/bin/bokeh serve bokeh_sample.py --use-xheaders --allow-websocket-origin=alb-a1b2-dev-private-1246541786.eu-west-3.elb.amazonaws.com
+ENV BOKEH_SERVER_OPTS --use-xheaders
+# --use-xheaders --allow-websocket-origin=alb-a1b2-dev-private-1246541786.eu-west-3.elb.amazonaws.com
+ENTRYPOINT /entrypoint.sh /venv/bin/bokeh serve bokeh_sample.py ${BOKEH_SERVER_OPTS}

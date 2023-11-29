@@ -79,6 +79,7 @@ install_docker() {
 }
 
 install_app_sample() {
+  export BOKEH_SERVER_OPTS "--use-xheaders --allow-websocket-origin=${alb_domain_name}"
   run_command pip3 install urllib3==1.26.6 docker-compose && \
   run_command cd $cmd_dir/bokeh_sample && \
   run_command docker-compose -f docker-compose.yml up -d --build && \
@@ -97,14 +98,12 @@ mount_efs() {
 }
 
 st=0
-region=$1
-export region
 info "starting"
 true && \
   run_command install_nginx && \
   run_command install_docker && \
   run_command install_app_sample && \
-  run_command mount_efs $region && \
+  run_command mount_efs && \
   true || (info failed && exit 1)
 st=$?
 info "ended"

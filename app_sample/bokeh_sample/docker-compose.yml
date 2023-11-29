@@ -7,3 +7,5 @@ services:
       context: .
     ports:
       - "8080:5006"
+    environment:
+      - BOKEH_SERVER_OPTS=${BOKEH_SERVER_OPTS:-}
