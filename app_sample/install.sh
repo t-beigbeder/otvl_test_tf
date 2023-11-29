@@ -82,7 +82,7 @@ install_app_sample() {
   export BOKEH_SERVER_OPTS "--use-xheaders --allow-websocket-origin=${alb_domain_name}"
   run_command pip3 install urllib3==1.26.6 docker-compose && \
   run_command cd $cmd_dir/bokeh_sample && \
-  run_command docker-compose -f docker-compose.yml up -d --build && \
+  run_command docker-compose -e BOKEH_SERVER_OPTS=${BOKEH_SERVER_OPTS} -f docker-compose.yml up -d --build && \
   true
   # FIXME: should install docker run as a systemd service
 }
