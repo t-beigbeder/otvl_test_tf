@@ -1,6 +1,7 @@
 # project
 tmp/
 *.tmp
+.ostmprc
 
 # goland
 /.idea
